@@ -1,0 +1,53 @@
+# Projet "robotique" IA&Jeux 2021
+#
+# Binome:
+#  Prénom Nom: _________
+#  Prénom Nom: _________
+
+def get_team_name():
+    return "[ TeamSS ]" # à compléter (comme vous voulez)
+
+def step(robotId, sensors):
+    
+    translation = 1 # vitesse de translation (entre -1 et +1)
+    rotation = 0 # vitesse de rotation (entre -1 et +1)
+
+    if sensors["sensor_front_left"]["distance"] < 1 or sensors["sensor_front"]["distance"] < 1:
+        rotation = 0.5  # rotation vers la droite
+    elif sensors["sensor_front_right"]["distance"] < 1:
+        rotation = -0.5  # rotation vers la gauche
+
+    if sensors["sensor_front"]["isRobot"] == True and sensors["sensor_front"]["isSameTeam"] == False:
+        enemy_detected_by_front_sensor = True # exemple de détection d'un robot de l'équipe adversaire (ne sert à rien)
+        if(robotId == 1):
+        
+        #le robot va tout droit si pas d obstacle
+            translation = 1.0
+            rotation = 0.0
+        
+        #si y a un mur il evite le mur, utilisation de hateWall
+            if(sensors["sensor_front"]["distance_to_wall"]<0.2 or sensors["sensor_front_left"]["distance_to_wall"]<0.2 or sensors["sensor_front_right"]["distance_to_wall"]<0.2 ):
+            
+            #il verifie si y a un robot si y a robot il le suit sinon il evite juste mur
+                if(sensors["sensor_front"]["distance_to_robot"] or sensors["sensor_front_left"]["distance_to_robot"] or sensors["sensor_front_right"]["distance_to_robot"] or sensors["sensor_back"]["distance_to_robot"] or sensors["sensor_back_left"]["distance_to_robot"] or sensors["sensor_back_right"]["distance_to_robot"]):
+                translation = sensors["sensor_front"]["distance_to_robot"]
+                rotation = 0.75*sensors["sensor_front_left"]["distance_to_robot"]-0.75* sensors["sensor_front_right"]["distance_to_robot"]-1+sensors["sensor_front"]["distance_to_robot"]-1+sensors["sensor_back"]["distance_to_robot"] 
+            
+                return translation,rotation
+                
+            #evite mur
+            #print("on fonce dans e mur",sensors["sensor_front"]["distance_to_wall"])
+            translation = 0.5*sensors["sensor_front"]["distance_to_wall"]+0.5*sensors["sensor_front"]["distance_to_robot"]
+            rotation = -0.5*sensors["sensor_front_left"]["distance_to_wall"]+0.5*sensors["sensor_front_right"]["distance_to_wall"]+1-sensors["sensor_front"]["distance_to_wall"]
+         
+            return translation,rotation
+            
+        #Si y a un robot le suit
+        elif(sensors["sensor_front"]["distance_to_robot"] or sensors["sensor_front_left"]["distance_to_robot"] or sensors["sensor_front_right"]["distance_to_robot"] or sensors["sensor_back"]["distance_to_robot"] or sensors["sensor_back_left"]["distance_to_robot"] or sensors["sensor_back_right"]["distance_to_robot"]): 
+           
+            translation = sensors["sensor_front"]["distance_to_robot"]
+            rotation = 0.75*sensors["sensor_front_left"]["distance_to_robot"]-0.75* sensors["sensor_front_right"]["distance_to_robot"]-1+sensors["sensor_front"]["distance_to_robot"]-1+sensors["sensor_back"]["distance_to_robot"]
+            
+        return translation, rotation
+
+    return translation, rotation
