@@ -1,4 +1,4 @@
-@@ -1,17 +1,10 @@
+# @@ -1,17 +1,10 @@
 # UE IA & JEUX - L3, SU
 # TP "comportement réactif"
 #
